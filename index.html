@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ESI Status</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script onload="load()">
+        function load() {
+            $.get("https://esi.evetech.net/status.json?version=latest", function(data, status) {
+                for (let e of data) {
+                    $("body").append(e);
+                }
+            });
+        }
+    </script>
+</head>
+<body style="background-color: black; color: white;">
+</body>
+</html>
