@@ -8,7 +8,7 @@
         function load() {
             $.get("https://esi.evetech.net/status.json?version=latest", function(data, status) {
                 for (let e of data) {
-                    $("body").append(e);
+                    $("body").append('<span>[' + e.status.toUpperCase() + '] ' + e.endpoint + ' | ' + e.method.toUpperCase() + ' ' + e.route + '</span>');
                 }
             });
         }
