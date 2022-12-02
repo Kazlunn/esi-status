@@ -11,7 +11,7 @@
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="bg-dark">
 <table id="esi_table" class="table table-sm table-hover table-dark">
     <thead>
     <tr>
@@ -20,6 +20,7 @@
         </th>
         <th scope="col">
             Endpoint
+            <input id="filter" type="text" placeholder="Filter endpoints">
         </th>
         <th scope="col">
             Method + Route
@@ -56,6 +57,15 @@
                     .append($('<td>').attr('class', style).append(e.method.toUpperCase() + ' ' + e.route))
                 );
         }
+    });
+
+    $(document).ready(function() {
+        $("#filter").on("keyup", function() {
+            let value = $(this).val().toLowerCase();
+            $("#esi_table tbody tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
     });
 </script>
 </body>
