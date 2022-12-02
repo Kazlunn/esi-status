@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESI Status Checker</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<table id="esi_table" class="table table-sm table-hover table-dark">
+    <thead>
+    <tr>
+        <th scope="col">
+            Status
+        </th>
+        <th scope="col">
+            Endpoint
+        </th>
+        <th scope="col">
+            Method + Route
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script>
+    $.get("https://esi.evetech.net/status.json?version=latest", function (data, status) {
+        for (let e of data) {
+            let status_emoji, style;
+            switch (e.status) {
+                case 'green':
+                    status_emoji = '🟢';
+                    style = '';
+                    break;
+                case 'yellow':
+                    status_emoji = '🟡';
+                    style = 'bg-warning';
+                    break;
+                case 'red':
+                default:
+                    status_emoji = '🔴';
+                    style = 'bg-danger';
+            }
+
+            $("#esi_table").find('tbody')
+                .append($('<tr>')
+                    .append($('<td>').append(status_emoji))
+                    .append($('<td>').attr('class', style).append(e.tags[0] + ' (' + e.endpoint + ')'))
+                    .append($('<td>').attr('class', style).append(e.method.toUpperCase() + ' ' + e.route))
+                );
+        }
+    });
+</script>
+</body>
+</html>
