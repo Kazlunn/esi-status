@@ -32,32 +32,35 @@
 </table>
 
 <script>
-    $.get("https://esi.evetech.net/status.json?version=latest", function (data, status) {
-        for (let e of data) {
-            let status_emoji, style;
-            switch (e.status) {
-                case 'green':
-                    status_emoji = '🟢';
-                    style = '';
-                    break;
-                case 'yellow':
-                    status_emoji = '🟡';
-                    style = 'bg-warning';
-                    break;
-                case 'red':
-                default:
-                    status_emoji = '🔴';
-                    style = 'bg-danger';
-            }
+    function updateTable() {
+        $("#esi_table").find('tbody').empty();
+        $.get("https://esi.evetech.net/status.json?version=latest", function (data, status) {
+            for (let e of data) {
+                let status_emoji, style;
+                switch (e.status) {
+                    case 'green':
+                        status_emoji = '🟢';
+                        style = '';
+                        break;
+                    case 'yellow':
+                        status_emoji = '🟡';
+                        style = 'bg-warning';
+                        break;
+                    case 'red':
+                    default:
+                        status_emoji = '🔴';
+                        style = 'bg-danger';
+                }
 
-            $("#esi_table").find('tbody')
-                .append($('<tr>')
-                    .append($('<td>').append(status_emoji))
-                    .append($('<td>').attr('class', style).append(e.tags[0] + ' (' + e.endpoint + ')'))
-                    .append($('<td>').attr('class', style).append(e.method.toUpperCase() + ' ' + e.route))
-                );
-        }
-    });
+                $("#esi_table").find('tbody')
+                    .append($('<tr>')
+                        .append($('<td>').append(status_emoji))
+                        .append($('<td>').attr('class', style).append(e.tags[0] + ' (' + e.endpoint + ')'))
+                        .append($('<td>').attr('class', style).append(e.method.toUpperCase() + ' ' + e.route))
+                    );
+            }
+        });
+    }
 
     $(document).ready(function() {
         $("#filter").on("keyup", function() {
@@ -67,6 +70,11 @@
             });
         });
     });
+
+    updateTable();
+    setInterval(function() {
+        updateTable();
+    }, 60 * 1000);
 </script>
 </body>
 </html>
