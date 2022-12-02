@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-gb" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESI Status Checker</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="/docs/output.css" rel="stylesheet">
+</head>
+<body class="dark:bg-black">
+<div class="flex flex-col">
+    <div class="overflow-x-auto">
+        <div class="inline-block min-w-full">
+            <div class="overflow-hidden">
+                <table id="esi_table" class="min-w-full table-fixed dark:divide-gray-700">
+                    <thead class="bg-gray-100 dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="text-sm font-medium dark:text-white px-6 py-3 text-left">
+                            Status
+                        </th>
+                        <th scope="col" class="text-sm font-medium dark:text-white px-6 py-3 text-left">
+                            Endpoint
+                        </th>
+                        <th scope="col" class="text-sm font-medium dark:text-white px-6 py-3 text-left">
+                            Method + Route
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="dark:bg-gray-800 dark:divide-gray-700">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $.get("https://esi.evetech.net/status.json?version=latest", function (data, status) {
+        for (let e of data) {
+            let status_emoji;
+            switch (e.status) {
+                case 'green':
+                    status_emoji = '🟢';
+                    break;
+                case 'yellow':
+                    status_emoji = '🟡';
+                    break;
+                case 'red':
+                default:
+                    status_emoji = '🔴';
+            }
+
+            $("#esi_table").find('tbody')
+                .append($('<tr>').attr('class', 'hover:bg-gray-100 dark:hover:bg-gray-700')
+                    .append($('<td>').attr('class', 'py-2 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white').append(status_emoji))
+                    .append($('<td>').attr('class', 'py-2 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white').append(e.tags[0] + ' (' + e.endpoint + ')'))
+                    .append($('<td>').attr('class', 'py-2 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white').append(e.method.toUpperCase() + ' ' + e.route))
+                );
+        }
+    });
+</script>
+</body>
+</html>
